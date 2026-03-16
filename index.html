@@ -13,7 +13,8 @@
 .hd{background:var(--red);border-bottom:none;padding:16px 0;position:sticky;top:0;z-index:100}
 .hdi{max-width:960px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between}
 .hdb{display:flex;align-items:center;gap:12px}
-.logo{height:44px;width:auto;flex-shrink:0;display:block}
+.logo-wrap{width:44px;height:44px;border-radius:50%;background:var(--wh);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.logo{height:36px;width:auto;display:block}
 .hdt{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--wh)}
 .hds{font-size:11px;color:rgba(255,255,255,0.75)}
 .badge{background:var(--wh);color:var(--blue);font-size:11px;font-weight:600;padding:5px 12px;border-radius:100px}
@@ -97,7 +98,7 @@ input::placeholder,textarea::placeholder{color:var(--g400)}textarea{resize:verti
 </head>
 <body>
 <div class="tb"></div>
-<header class="hd"><div class="hdi"><div class="hdb"><img class="logo" src="https://specialolympicsdc.org/wp-content/uploads/2019/07/cropped-Red-with-Black-Text-Transparent-2-192x192.png" alt="Special Olympics DC"><div><div class="hdt">Sports Intent Declaration</div><div class="hds">Special Olympics District of Columbia</div></div></div><div class="badge" id="sbadge">Spring 2026</div></div></header>
+<header class="hd"><div class="hdi"><div class="hdb"><div class="logo-wrap"><img class="logo" src="https://specialolympicsdc.org/wp-content/uploads/2019/07/cropped-Red-with-Black-Text-Transparent-2-192x192.png" alt="Special Olympics DC"></div><div><div class="hdt">Sports Intent Declaration</div><div class="hds">Special Olympics District of Columbia</div></div></div><div class="badge" id="sbadge">Spring 2026</div></div></header>
 <div class="stp" id="stp"><div class="sd a"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div></div>
 <div class="sl" id="slbl">Step 1 of 4: Program Information</div>
 <div class="mn">
