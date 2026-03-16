@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SODC Sports Intent Declaration</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+:root{--red:#E42B2B;--red-l:#FFF0F0;--blue:#0057B8;--blue-l:#EBF3FF;--yel:#F5A623;--yel-l:#FFF8EB;--grn:#00A651;--grn-l:#EDFFF5;--dk:#1a1a2e;--wh:#fff;--bg:#f4f5f7;--g50:#f9fafb;--g100:#f3f4f6;--g200:#e5e7eb;--g300:#d1d5db;--g400:#9ca3af;--g500:#6b7280;--g700:#374151;--g900:#111827;--sh:0 1px 2px rgba(0,0,0,.05);--r:12px;--rs:8px;--rx:6px}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--g900);line-height:1.5}
+.tb{height:5px;background:linear-gradient(90deg,var(--red) 25%,var(--blue) 25% 50%,var(--yel) 50% 75%,var(--grn) 75%)}
+.hd{background:var(--wh);border-bottom:1px solid var(--g200);padding:16px 0;position:sticky;top:0;z-index:100}
+.hdi{max-width:960px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between}
+.hdb{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:50%;position:relative;overflow:hidden;flex-shrink:0}
+.logo::before{content:'';position:absolute;width:100%;height:100%;background:conic-gradient(var(--red) 0deg 90deg,var(--blue) 90deg 180deg,var(--yel) 180deg 270deg,var(--grn) 270deg 360deg);border-radius:50%}
+.logo::after{content:'SO';position:relative;z-index:1;color:white;font-family:'Playfair Display',serif;font-weight:700;font-size:13px;letter-spacing:1px;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+.hdt{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--dk)}
+.hds{font-size:11px;color:var(--g500)}
+.badge{background:var(--blue-l);color:var(--blue);font-size:11px;font-weight:600;padding:5px 12px;border-radius:100px}
+.stp{max-width:960px;margin:0 auto;padding:16px 24px 0;display:flex;gap:4px}
+.sd{flex:1;height:4px;border-radius:4px;background:var(--g200);transition:background .3s}.sd.a{background:var(--blue)}
+.sl{max-width:960px;margin:0 auto;padding:5px 24px 0;font-size:11px;color:var(--g500);font-weight:500}
+.mn{max-width:960px;margin:0 auto;padding:10px 24px 48px}
+.cd{background:var(--wh);border-radius:var(--r);border:1px solid var(--g200);padding:24px;margin-bottom:14px;box-shadow:var(--sh);display:none}
+.cd.a{display:block;animation:fu .25s ease}@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.ch{margin-bottom:18px;padding-bottom:12px;border-bottom:2px solid var(--g100)}
+.cn{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:var(--blue);color:white;border-radius:50%;font-size:11px;font-weight:700;margin-bottom:5px}
+.ch h2{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--dk)}.ch p{font-size:12px;color:var(--g500);margin-top:2px}
+.fg{margin-bottom:14px}.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.fr{grid-template-columns:1fr}}
+label,.lb{display:block;font-size:11px;font-weight:600;color:var(--g700);margin-bottom:3px;letter-spacing:.03em;text-transform:uppercase}.rq{color:var(--red)}
+input[type="text"],input[type="email"],input[type="tel"],input[type="number"],input[type="date"],select,textarea{width:100%;padding:9px 11px;border:1.5px solid var(--g200);border-radius:var(--rx);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--g900);background:var(--wh);transition:border-color .2s,box-shadow .2s;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,87,184,.08)}
+input::placeholder,textarea::placeholder{color:var(--g400)}textarea{resize:vertical;min-height:56px}
+.ib{background:var(--blue-l);border-left:3px solid var(--blue);padding:10px 12px;border-radius:0 var(--rx) var(--rx) 0;font-size:12px;color:var(--g700);margin-bottom:14px;line-height:1.5}
+.wb{background:var(--yel-l);border-left:3px solid var(--yel);padding:10px 12px;border-radius:0 var(--rx) var(--rx) 0;font-size:12px;color:var(--g700);margin-bottom:14px}
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:7px}
+.so{position:relative}.so input{position:absolute;opacity:0;pointer-events:none}
+.so label{display:flex;align-items:center;gap:9px;padding:9px 11px;border:1.5px solid var(--g200);border-radius:var(--rx);cursor:pointer;transition:all .2s;font-weight:500;font-size:12px;margin-bottom:0;text-transform:none}
+.so label:hover{border-color:var(--blue);background:rgba(0,87,184,.02)}
+.so input:checked+label{border-color:var(--blue);background:var(--blue-l);color:var(--blue);font-weight:600}
+.si{font-size:15px;width:20px;text-align:center}
+.sc{width:15px;height:15px;border:2px solid var(--g300);border-radius:3px;margin-left:auto;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.so input:checked+label .sc{background:var(--blue);border-color:var(--blue)}
+.so input:checked+label .sc::after{content:'✓';color:white;font-size:9px;font-weight:700}
+/* Import */
+.im{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}@media(max-width:600px){.im{grid-template-columns:1fr}}
+.ic{border:2px solid var(--g200);border-radius:var(--rs);padding:16px 14px;text-align:center;cursor:pointer;transition:all .2s;background:var(--wh)}
+.ic:hover{border-color:var(--blue);background:var(--blue-l)}.ic.sel{border-color:var(--blue);background:var(--blue-l);box-shadow:0 0 0 3px rgba(0,87,184,.08)}
+.ic .ii{font-size:24px;margin-bottom:6px}.ic .it{font-size:13px;font-weight:600;color:var(--g900)}.ic .id{font-size:10px;color:var(--g500);line-height:1.3;margin-top:2px}
+.uz{display:none;margin-bottom:16px}.uz.a{display:block;animation:fu .25s ease}
+.da{border:2px dashed var(--g300);border-radius:var(--rs);padding:28px 16px;text-align:center;cursor:pointer;transition:all .2s;background:var(--g50)}
+.da:hover,.da.dg{border-color:var(--blue);background:var(--blue-l)}
+.da .di{font-size:32px;margin-bottom:6px}.da .dt{font-size:13px;color:var(--g700);font-weight:500}.da .ds{font-size:11px;color:var(--g400);margin-top:3px}
+.ma{display:none;margin-bottom:16px;background:var(--g50);border-radius:var(--rs);padding:16px;border:1px solid var(--g200)}.ma.a{display:block;animation:fu .25s ease}
+.mr{display:grid;grid-template-columns:130px 1fr;gap:8px;align-items:center;margin-bottom:6px;font-size:12px}.mr .ml{font-weight:600;color:var(--g700)}.mr select{padding:5px 7px;font-size:12px}
+.ir{display:none;margin-bottom:16px;background:var(--grn-l);border:1px solid #b3e6cc;border-radius:var(--rs);padding:14px}.ir.a{display:block;animation:fu .25s ease}
+.irh{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}.irt{font-size:13px;font-weight:600;color:var(--grn)}.irc{font-size:11px;color:var(--g500)}.irn{font-size:11px;color:var(--g500);margin-top:4px}
+.ib2{padding:5px 12px;border-radius:100px;font-size:11px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+.iba{background:var(--grn);color:white}.iba:hover{background:#008c44}
+.ibc{background:transparent;color:var(--g500);border:1px solid var(--g300);margin-left:6px}
+/* Roster */
+.rw{overflow-x:auto;margin:0 -24px;padding:0 24px}
+.rt{width:100%;border-collapse:collapse;font-size:12px;min-width:880px}
+.rt th{background:var(--g900);color:white;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:7px 5px;text-align:left;white-space:nowrap;position:sticky;top:0;z-index:5}
+.rt th.spc{background:var(--blue);text-align:center;min-width:36px}
+.rt td{padding:3px;border-bottom:1px solid var(--g100);vertical-align:middle}
+.rt tr:hover td{background:var(--g50)}
+.rt .rn{font-size:10px;color:var(--g400);font-weight:600;text-align:center;width:26px}
+.rt input[type="text"],.rt select{padding:5px 5px;font-size:11px;border:1px solid var(--g200);border-radius:3px;min-width:0;width:100%}
+.rt input:focus,.rt select:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(0,87,184,.08)}
+.rt .scc{text-align:center}.rt .scc input[type="checkbox"]{width:15px;height:15px;cursor:pointer;accent-color:var(--blue)}
+.rt .nc{min-width:100px}.rt .sc2{min-width:52px}.rt .ec{min-width:110px}
+.ab{display:inline-flex;align-items:center;gap:5px;margin-top:10px;padding:7px 14px;font-size:12px;font-weight:600;color:var(--blue);background:var(--blue-l);border:1.5px solid transparent;border-radius:100px;cursor:pointer;transition:all .2s}.ab:hover{border-color:var(--blue)}
+.rb{width:20px;height:20px;font-size:13px;color:var(--g400);background:none;border:none;cursor:pointer;border-radius:50%;transition:all .2s;display:inline-flex;align-items:center;justify-content:center}.rb:hover{color:var(--red);background:var(--red-l)}
+/* Summary */
+.st{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+.st th{background:var(--grn);color:white;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:7px 9px;text-align:center}
+.st td{padding:7px 9px;border-bottom:1px solid var(--g100);text-align:center;font-weight:600}.st td:first-child{text-align:left;font-weight:500}
+.st .tr td{background:var(--g100);font-weight:700;border-top:2px solid var(--g300)}
+/* Compliance */
+.comp{margin-top:16px;background:var(--yel-l);border-radius:var(--rs);padding:14px;border:1px solid #f0dba8}
+.comp h4{font-size:13px;font-weight:600;color:var(--g900);margin-bottom:6px}.comp ul{list-style:none;font-size:12px;color:var(--g700)}.comp li{padding:3px 0}.comp .miss{color:var(--red);font-weight:600}
+/* Buttons */
+.br{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:14px;border-top:1px solid var(--g100)}
+.bt{padding:9px 22px;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;border:none;display:inline-flex;align-items:center;gap:5px}
+.bp{background:var(--blue);color:white;box-shadow:0 2px 6px rgba(0,87,184,.18)}.bp:hover{background:#004a9e;transform:translateY(-1px)}
+.bb{background:transparent;color:var(--g500);border:1.5px solid var(--g200)}.bb:hover{border-color:var(--g400);color:var(--g700)}
+.bs{background:var(--grn);color:white;box-shadow:0 2px 6px rgba(0,166,81,.18);padding:11px 28px;font-size:14px}.bs:hover{background:#008c44;transform:translateY(-1px)}
+/* Confirm */
+.cc{text-align:center;padding:36px 16px}
+.ci{width:68px;height:68px;background:linear-gradient(135deg,var(--grn),#00c965);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:30px;color:white;box-shadow:0 6px 18px rgba(0,166,81,.28)}
+.cc h2{font-family:'Playfair Display',serif;font-size:22px;color:var(--dk);margin-bottom:6px}.cc p{color:var(--g500);font-size:13px;max-width:400px;margin:0 auto 5px}
+.ft{text-align:center;padding:18px;font-size:10px;color:var(--g400)}.ft a{color:var(--blue);text-decoration:none}
+@media(max-width:640px){.badge{display:none}.cd{padding:18px 14px}.rw{margin:0 -14px;padding:0 14px}}
+</style>
+</head>
+<body>
+<div class="tb"></div>
+<header class="hd"><div class="hdi"><div class="hdb"><div class="logo"></div><div><div class="hdt">Sports Intent Declaration</div><div class="hds">Special Olympics District of Columbia</div></div></div><div class="badge" id="sbadge">Spring 2026</div></div></header>
+<div class="stp" id="stp"><div class="sd a"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div></div>
+<div class="sl" id="slbl">Step 1 of 4: Program Information</div>
+<div class="mn">
+
+<!-- STEP 1 -->
+<div class="cd a" id="s1">
+<div class="ch"><div class="cn">1</div><h2>Program Information</h2><p>School and coordinator details for this registration.</p></div>
+<div class="ib"><strong>Traditional Sports:</strong> For individuals with intellectual disabilities. <strong>Unified Sports:</strong> Teams pair one athlete (with ID) and one partner (without ID), ages 8+.</div>
+<div class="fr fg">
+<div><label>School Type <span class="rq">*</span></label>
+<select id="f-stype" onchange="filterSchools()"><option value="">Select type...</option><option value="elem">DCPS Elementary</option><option value="mid">DCPS Middle School</option><option value="high">DCPS High School</option><option value="ec">DCPS Education Campus</option><option value="charter">DC Charter School</option><option value="other">Private / Other</option></select></div>
+<div><label>School Name <span class="rq">*</span></label>
+<select id="f-school"><option value="">Select school type first...</option></select></div>
+</div>
+<div class="fg" id="osw" style="display:none"><label>School Name <span class="rq">*</span></label><input type="text" id="f-so" placeholder="Enter school name"></div>
+<div class="fr fg"><div><label>Coordinator Name <span class="rq">*</span></label><input type="text" id="f-nm" placeholder="Full name"></div><div><label>Role / Title</label><input type="text" id="f-rl" placeholder="e.g. PE Teacher, SPED Coordinator"></div></div>
+<div class="fr fg"><div><label>Contact Email <span class="rq">*</span></label><input type="email" id="f-em" placeholder="name at school dot edu"></div><div><label>Cell Phone <span class="rq">*</span></label><input type="tel" id="f-ph" placeholder="(202) 555-0123"></div></div>
+<div class="fg"><label>Season</label><select id="f-se"><option value="Spring 2026" selected>Spring 2026</option><option value="Fall 2026">Fall 2026</option><option value="Winter 2026">Winter 2026</option></select></div>
+<div class="br"><div></div><button class="bt bp" onclick="go(2)">Continue →</button></div>
+</div>
+
+<!-- STEP 2 -->
+<div class="cd" id="s2">
+<div class="ch"><div class="cn">2</div><h2>Choose Your Sport(s)</h2><p>Select the sport(s) your school will participate in this season.</p></div>
+<div class="sg" id="sgrid"></div>
+<div class="br"><button class="bt bb" onclick="go(1)">← Back</button><button class="bt bp" onclick="go(3)">Continue to Roster →</button></div>
+</div>
+
+<!-- STEP 3 -->
+<div class="cd" id="s3">
+<div class="ch"><div class="cn">3</div><h2>Athlete Roster</h2><p>List all athletes alphabetically by last name. Each must have a signed Registration/Release form on file.</p></div>
+<div class="wb"><strong>Transportation Notice:</strong> Transportation arranged only for athletes listed on this roster (including wheelchair athletes). Ensure your roster is correct and finalized.</div>
+<div class="lb" style="margin-bottom:6px">How would you like to add athletes?</div>
+<div class="im">
+<div class="ic sel" onclick="sim('man')" id="im-man"><div class="ii">⌨️</div><div class="it">Type Manually</div><div class="id">Enter each athlete into the table below</div></div>
+<div class="ic" onclick="sim('csv')" id="im-csv"><div class="ii">📊</div><div class="it">Upload Spreadsheet</div><div class="id">Import from CSV or Excel file</div></div>
+</div>
+<div class="uz" id="uz-csv"><div class="da" id="csvd" onclick="document.getElementById('csvi').click()"><div class="di">📊</div><div class="dt">Drop your CSV or Excel file here, or click to browse</div><div class="ds">Supports .csv and .tsv files</div></div><input type="file" id="csvi" accept=".csv,.tsv" style="display:none" onchange="hcsv(this)"></div>
+<div class="ma" id="cmap"><div style="font-size:13px;font-weight:600;color:var(--g900);margin-bottom:10px">Map Your Columns</div><p style="font-size:11px;color:var(--g500);margin-bottom:12px">Match your spreadsheet columns to roster fields. Leave blank for columns that don't apply.</p><div id="mrows"></div><div style="margin-top:12px;display:flex;gap:6px"><button class="ib2 iba" onclick="amap()">Import Athletes</button><button class="ib2 ibc" onclick="ccsv()">Cancel</button></div></div>
+<div class="ir" id="irev"><div class="irh"><div class="irt">✓ Athletes Imported</div><div class="irc" id="irct"></div></div><div class="irn">Data loaded into the roster below. Please review and correct any errors, then check sport selections.</div><div style="margin-top:8px"><button class="ib2 ibc" onclick="clr()">Clear Roster</button></div></div>
+<div class="rw"><table class="rt" id="rtbl"><thead id="rthd"></thead><tbody id="rtbd"></tbody></table></div>
+<button class="ab" onclick="addr()">+ Add Athlete</button>
+<div class="br"><button class="bt bb" onclick="go(2)">← Back</button><button class="bt bp" onclick="go(4)">Review & Submit →</button></div>
+</div>
+
+<!-- STEP 4 -->
+<div class="cd" id="s4">
+<div class="ch"><div class="cn">4</div><h2>Review &amp; Submit</h2><p>Verify the participation summary auto-generated from your roster.</p></div>
+<div id="rvp" style="margin-bottom:16px"></div>
+<div class="lb" style="margin-bottom:3px">Program Participation Summary</div>
+<p style="font-size:11px;color:var(--g500);margin-bottom:6px">Auto-calculated from your roster. Helps SODC order equipment, schedule practices, and arrange transportation.</p>
+<div id="stw"></div>
+<div id="compw"></div>
+<div class="fg" style="margin-top:16px"><label>Additional Notes</label><textarea id="f-nt" placeholder="Special requests, scheduling notes, or additional information..."></textarea></div>
+<div class="br"><button class="bt bb" onclick="go(3)">← Back</button><button class="bt bs" onclick="sub()">Submit Intent Declaration ✓</button></div>
+</div>
+
+<!-- CONFIRM -->
+<div class="cd" id="s5">
+<div class="cc"><div class="ci">✓</div><h2>Intent Declaration Submitted!</h2><p>A confirmation has been sent to the email provided. Our team will follow up within 2 business days.</p><div id="csum" style="background:var(--g50);border-radius:var(--rs);padding:14px;margin:18px auto;max-width:380px;text-align:left;font-size:12px"></div><p style="font-size:11px;color:var(--g500);margin-top:14px">Please ensure all athletes have a signed Registration/Release form submitted separately.<br>Questions? <a href="/<a href="#" style="color:var(--blue);font-weight:600" onclick="window.location='mai'+'lto:'+'sports'+'@'+'specialolympicsdc'+'./l/email-protection#b6c5c6d9c4c2c5f6c5c6d3d5dfd7dad9dacfdbc6dfd5c5d2d598d9c4d1" style="color:var(--blue);font-weight:600"><span class="__cf_email__" data-cfemail="9deeedf2efe9eeddeeedf8fef4fcf1f2f1e4f0edf4feeef9feb3f2effa">[email&#160;protected]</span></a> · (202) 408-2640</p></div>
+</div>
+
+</div>
+<div class="ft">Special Olympics District of Columbia · 415 Michigan Ave NE, Washington, DC 20017<br><a href="https://specialolympicsdc.org">specialolympicsdc.org</a> · (202) 408-2640<br><span style="opacity:.5;font-size:9px;margin-top:3px;display:inline-block">Registration system powered by OptimaNova AI</span></div>
+
+<script>
+const SCHOOLS={
+elem:['Amidon-Bowen Elementary','Bancroft Elementary','Barnard Elementary','Beers Elementary','Brent Elementary','Brightwood Elementary','Bruce-Monroe Elementary @ Park View','Bunker Hill Elementary','Burroughs Elementary','Burrville Elementary','C.W. Harris Elementary','Cleveland Elementary','Dorothy I. Height Elementary','Drew Elementary','Eaton Elementary','Garfield Elementary','Garrison Elementary','H.D. Cooke Elementary','Hearst Elementary','Hendley Elementary','Houston Elementary','Hyde-Addison Elementary','J.O. Wilson Elementary','Janney Elementary','John Lewis Elementary','Ketcham Elementary','Key Elementary','Kimball Elementary','King Elementary','Lafayette Elementary','Langdon Elementary','Langley Elementary','LaSalle-Backus Elementary','Lawrence E. Boone Elementary','Lorraine H. Whitlock Elementary','Ludlow-Taylor Elementary','Malcolm X Elementary @ Green','Mann Elementary','Marie Reed Elementary','Maury Elementary','Miner Elementary','Moten Elementary','Murch Elementary','Nalle Elementary','Noyes Elementary','Orr Elementary','Patterson Elementary','Payne Elementary','Peabody Elementary','Plummer Elementary','Powell Elementary','Randle Highlands Elementary','Raymond Elementary','Ross Elementary','Savoy Elementary','Seaton Elementary','Shepherd Elementary','Shirley Chisholm Elementary','Simon Elementary','Smothers Elementary','Stanton Elementary','Thomas Elementary','Truesdell Elementary','Turner Elementary','Tyler Elementary','Van Ness Elementary','Watkins Elementary','West Elementary','Wheatley Elementary','Whittier Elementary'],
+mid:['Brookland Middle School','Deal Middle School','Eliot-Hine Middle School','Hardy Middle School','Hart Middle School','Ida B. Wells Middle School','Jefferson Middle School Academy','Johnson Middle School','Kelly Miller Middle School','Kramer Middle School','MacFarland Middle School','McKinley Middle School','Sousa Middle School','Stuart-Hobson Middle School'],
+high:['Anacostia High School','Ballou High School','Ballou STAY High School','Bard High School Early College DC','Benjamin Banneker High School','Cardozo Education Campus','Columbia Heights Education Campus','Coolidge High School','Duke Ellington School of the Arts','Dunbar High School','Eastern High School','Garnet-Patterson STAY High School','H.D. Woodson High School','Jackson-Reed High School','Luke C. Moore High School','MacArthur High School','McKinley Technology High School','Phelps ACE High School','Ron Brown College Prep High School','Roosevelt High School','School Without Walls High School'],
+ec:['Browne Education Campus','Capitol Hill Montessori @ Logan','Excel Academy','John Francis Education Campus','Leckie Education Campus','Oyster-Adams Bilingual School','River Terrace Education Campus','School-Within-School @ Goding','Sharpe Health School'],
+charter:['Achievement Prep PCS','AppleTree Early Learning PCS','BASIS DC PCS','Bridges PCS','Capital City PCS','Capitol Hill Montessori PCS','Cedar Tree Academy PCS','Center City PCS','Creative Minds International PCS','DC Bilingual PCS','DC International School','DC Prep PCS','DC Scholars PCS','Eagle Academy PCS','E.L. Haynes PCS','Elsie Whitlow Stokes PCS','Friendship PCS','Goodwill Excel Center PCS','Harmony DC PCS','Hope Community PCS','Howard University Middle School PCS','Ideal Academy PCS','Imagine Hope Community PCS','Ingenuity Prep PCS','Inspired Teaching Demonstration PCS','KIPP DC PCS','LAMB PCS','Latin American Montessori Bilingual PCS','Lee Montessori PCS','Mary McLeod Bethune PCS','Meridian PCS','Monument Academy PCS','Mundo Verde Bilingual PCS','National Collegiate Prep PCS','Paul PCS','Perry Street Prep PCS','Rocketship DC PCS','SEED PCS of Washington DC','Shining Stars Montessori PCS','Somerset Prep DC PCS','St. Coletta Special Education PCS','Statesmen College Prep PCS','The Children\'s Guild PCS','Thurgood Marshall Academy PCS','Two Rivers PCS','Washington Latin PCS','Washington Yu Ying PCS']
+};
+function filterSchools(){const t=document.getElementById('f-stype').value;const sel=document.getElementById('f-school');sel.innerHTML='';document.getElementById('osw').style.display=t==='other'?'block':'none';if(!t||t==='other'){const o=document.createElement('option');o.value='';o.textContent='N/A';sel.appendChild(o);return}const list=SCHOOLS[t]||[];const d=document.createElement('option');d.value='';d.textContent='Choose your school...';sel.appendChild(d);list.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;sel.appendChild(o)})}
+document.addEventListener('click',function(){});
+const SPS={
+'Spring 2026':[
+{id:'t-track',n:'Traditional Track & Field',i:'🏃',t:'Traditional',l:'Youth'},
+{id:'t-soccer',n:'Traditional Soccer',i:'⚽',t:'Traditional',l:'Youth'},
+{id:'u-soccer',n:'Unified Soccer',i:'⚽',t:'Unified',l:'Youth'},
+{id:'t-tennis',n:'Traditional Tennis',i:'🎾',t:'Traditional',l:'Youth & Adult'},
+{id:'t-golf',n:'Traditional Golf',i:'⛳',t:'Traditional',l:'Adult'},
+{id:'t-flag',n:'Traditional Flag Football',i:'🏈',t:'Traditional',l:'Youth'}],
+'Fall 2026':[
+{id:'t-bowl-f',n:'Traditional Bowling',i:'🎳',t:'Traditional',l:'Youth & Adult'},
+{id:'t-soc-f',n:'Trad. Soccer Ind. Skills',i:'⚽',t:'Traditional',l:'Youth'},
+{id:'t-vball',n:'Traditional Volleyball',i:'🏐',t:'Traditional',l:'Youth'},
+{id:'u-vball',n:'Unified Volleyball',i:'🏐',t:'Unified',l:'Youth'},
+{id:'t-bocce-f',n:'Traditional Bocce',i:'🟢',t:'Traditional',l:'Youth'}],
+'Winter 2026':[
+{id:'t-bowl',n:'Traditional Bowling',i:'🎳',t:'Traditional',l:'Youth & Adult'},
+{id:'t-bocce',n:'Traditional Bocce Team',i:'🟢',t:'Traditional',l:'Youth'},
+{id:'t-soc-sk',n:'Trad. Soccer Ind. Skills',i:'⚽',t:'Traditional',l:'Youth'},
+{id:'a-bball',n:'Adult Basketball Team',i:'🏀',t:'Traditional',l:'Adult'},
+{id:'u-bball',n:'Unified Basketball',i:'🏀',t:'Unified',l:'Youth'},
+{id:'u-bocce',n:'Unified Bocce',i:'🟢',t:'Unified',l:'Youth'}]
+};
+const RF=[{k:'lastName',l:'Last Name'},{k:'firstName',l:'First Name'},{k:'gender',l:'Gender'},{k:'shirt',l:'Shirt Size'},{k:'medical',l:'Medical Clearance (Y/N)'},{k:'wheelchair',l:'Wheelchair (Y/N)'},{k:'ecName',l:'Emergency Contact Name'},{k:'ecPhone',l:'Emergency Contact Phone'}];
+let cs=1,ss=[],rc=0,cd=null,ch=[];
+
+function go(s){if(s>cs&&!val(cs))return;if(s===2)bsg();if(s===3)brt();if(s===4)brv();document.getElementById('s'+cs).classList.remove('a');document.getElementById('s'+s).classList.add('a');cs=s;document.querySelectorAll('.sd').forEach((d,i)=>d.classList.toggle('a',i<s));const lb={1:'Step 1 of 4: Program Information',2:'Step 2 of 4: Choose Your Sport(s)',3:'Step 3 of 4: Athlete Roster',4:'Step 4 of 4: Review & Submit'};document.getElementById('slbl').textContent=lb[s]||'';window.scrollTo({top:0,behavior:'smooth'})}
+
+function val(s){
+if(s===1){const sc=document.getElementById('f-school').value,st=document.getElementById('f-stype').value,n=document.getElementById('f-nm').value.trim(),e=document.getElementById('f-em').value.trim(),p=document.getElementById('f-ph').value.trim();if(!st){alert('Please select a school type.');return false}if(st==='other'){if(!document.getElementById('f-so').value.trim()){alert('Please enter your school name.');return false}}else if(!sc){alert('Please select your school.');return false}if(!n||!e||!p){alert('Please fill in all required fields.');return false}}
+if(s===2){ss=gss();if(!ss.length){alert('Please choose at least one sport.');return false}}
+if(s===3){const r=grd();if(!r.length){alert('Please add at least one athlete.');return false}if(r.some(x=>!x.lastName||!x.firstName)){alert('Please enter first and last name for each athlete.');return false}}
+return true}
+
+document.getElementById('f-se').addEventListener('change',function(){document.getElementById('sbadge').textContent=this.value;ss=[]});
+
+function bsg(){const se=document.getElementById('f-se').value;const sp=SPS[se]||[];document.getElementById('sgrid').innerHTML=sp.map(s=>`<div class="so"><input type="checkbox" id="sp-${s.id}" name="sp" value="${s.id}" ${ss.includes(s.id)?'checked':''}><label for="sp-${s.id}"><span class="si">${s.i}</span><span>${s.n}<br><span style="font-size:9px;color:var(--g400);font-weight:400">${s.t} · ${s.l}</span></span><span class="sc"></span></label></div>`).join('')}
+function gss(){return[...document.querySelectorAll('input[name="sp"]:checked')].map(c=>c.value)}
+function gso(){const se=document.getElementById('f-se').value;return(SPS[se]||[]).filter(s=>gss().includes(s.id))}
+
+// Import
+let im='man';
+function sim(m){im=m;document.querySelectorAll('.ic').forEach(c=>c.classList.remove('sel'));document.getElementById('im-'+m).classList.add('sel');document.querySelectorAll('.uz').forEach(z=>z.classList.remove('a'));if(m==='csv')document.getElementById('uz-csv').classList.add('a')}
+const csvd=document.getElementById('csvd');if(csvd){csvd.addEventListener('dragover',e=>{e.preventDefault();csvd.classList.add('dg')});csvd.addEventListener('dragleave',()=>csvd.classList.remove('dg'));csvd.addEventListener('drop',e=>{e.preventDefault();csvd.classList.remove('dg');if(e.dataTransfer.files[0])pcsv(e.dataTransfer.files[0])})}
+function hcsv(i){if(i.files[0])pcsv(i.files[0])}
+function pcsv(f){Papa.parse(f,{header:true,skipEmptyLines:true,complete:r=>{cd=r.data;ch=r.meta.fields||[];smap()},error:e=>alert('Error: '+e.message)})}
+function smap(){const c=document.getElementById('mrows');const sk='<option value="">-- Skip --</option>';const ho=ch.map(h=>`<option value="${h}">${h}</option>`).join('');c.innerHTML=RF.map(f=>{return`<div class="mr"><div class="ml">${f.l}</div><select data-f="${f.k}">${sk}${ho}</select></div>`}).join('');c.querySelectorAll('select').forEach(sel=>{const fk=sel.getAttribute('data-f');const av=ch.find(h=>{const hl=h.toLowerCase().replace(/[^a-z]/g,'');if(fk==='lastname')return hl.includes('last')||hl==='surname';if(fk==='firstname')return hl.includes('first')||hl==='fname';if(fk==='gender')return hl.includes('gender')||hl.includes('sex');if(fk==='shirt')return hl.includes('shirt')||hl.includes('size');if(fk==='medical')return hl.includes('medical')||hl.includes('clearance');if(fk==='wheelchair')return hl.includes('wheel')||hl==='wc';if(fk==='ecname')return hl.includes('emergency')&&hl.includes('name');if(fk==='ecphone')return hl.includes('emergency')&&hl.includes('phone');return false});if(av)sel.value=av});document.getElementById('cmap').classList.add('a');document.getElementById('uz-csv').classList.remove('a')}
+function amap(){const mp={};document.querySelectorAll('#mrows select').forEach(s=>{const f=s.getAttribute('data-f');if(s.value)mp[f]=s.value});document.getElementById('rtbd').innerHTML='';rc=0;cd.forEach(row=>{const hn=(mp.lastName&&row[mp.lastName])||(mp.firstName&&row[mp.firstName]);if(!hn)return;addr();const tr=document.getElementById('rtbd').lastElementChild;Object.entries(mp).forEach(([f,col])=>{const v=(row[col]||'').trim();if(!v)return;const inp=tr.querySelector(`[data-f="${f}"]`);if(inp){if(inp.tagName==='SELECT'){const o=[...inp.options].find(x=>x.value.toUpperCase()===v.toUpperCase());if(o)inp.value=o.value}else inp.value=v}})});document.getElementById('cmap').classList.remove('a');document.getElementById('irev').classList.add('a');document.getElementById('irct').textContent=document.querySelectorAll('#rtbd tr').length+' athletes imported'}
+function ccsv(){document.getElementById('cmap').classList.remove('a');sim('man');cd=null;ch=[]}
+function clr(){document.getElementById('rtbd').innerHTML='';rc=0;for(let i=0;i<5;i++)addr();document.getElementById('irev').classList.remove('a')}
+
+// Roster
+function brt(){ss=gss();const sp=gso();document.getElementById('rthd').innerHTML=`<tr><th style="width:26px">#</th><th class="nc">Last Name</th><th class="nc">First Name</th><th class="sc2">Gender</th><th class="sc2">Shirt</th><th class="sc2" title="Medical Clearance">Med</th><th class="sc2" title="Wheelchair">WC</th>${sp.map(s=>`<th class="spc" title="${s.n}">${s.i}</th>`).join('')}<th class="ec">EC Name</th><th class="ec">EC Phone</th><th style="width:24px"></th></tr>`;const tb=document.getElementById('rtbd');if(!tb.children.length){rc=0;for(let i=0;i<10;i++)addr()}else rsc(sp)}
+function addr(){rc++;const sp=gso();const tr=document.createElement('tr');tr.innerHTML=`<td class="rn">${rc}</td><td class="nc"><input type="text" placeholder="Last" data-f="lastName"></td><td class="nc"><input type="text" placeholder="First" data-f="firstName"></td><td class="sc2"><select data-f="gender"><option value="">-</option><option value="M">M</option><option value="F">F</option></select></td><td class="sc2"><select data-f="shirt"><option value="">-</option><option>YS</option><option>YM</option><option>YL</option><option>S</option><option>M</option><option>L</option><option>XL</option><option>2XL</option><option>3XL</option></select></td><td class="sc2"><select data-f="medical"><option value="">-</option><option value="Y">Y</option><option value="N">N</option></select></td><td class="sc2"><select data-f="wheelchair"><option value="N">N</option><option value="Y">Y</option></select></td>${sp.map(s=>`<td class="scc"><input type="checkbox" data-sp="${s.id}"></td>`).join('')}<td class="ec"><input type="text" placeholder="Name" data-f="ecName"></td><td class="ec"><input type="text" placeholder="Phone" data-f="ecPhone"></td><td><button class="rb" onclick="rmr(this)" title="Remove">×</button></td>`;document.getElementById('rtbd').appendChild(tr)}
+function rmr(b){if(document.getElementById('rtbd').children.length<=1)return;b.closest('tr').remove();rnr()}
+function rnr(){document.querySelectorAll('#rtbd tr').forEach((r,i)=>{r.querySelector('.rn').textContent=i+1});rc=document.querySelectorAll('#rtbd tr').length}
+function rsc(sp){document.querySelectorAll('#rtbd tr').forEach(row=>{row.querySelectorAll('.scc').forEach(c=>c.remove());const ec=row.querySelector('[data-f="ecName"]').closest('td');sp.forEach(s=>{const td=document.createElement('td');td.className='scc';td.innerHTML=`<input type="checkbox" data-sp="${s.id}">`;row.insertBefore(td,ec)})})}
+function grd(){const rows=document.querySelectorAll('#rtbd tr');const d=[];rows.forEach(r=>{const ln=r.querySelector('[data-f="lastName"]')?.value.trim()||'';const fn=r.querySelector('[data-f="firstName"]')?.value.trim()||'';if(!ln&&!fn)return;const e={lastName:ln,firstName:fn,gender:r.querySelector('[data-f="gender"]')?.value||'',shirt:r.querySelector('[data-f="shirt"]')?.value||'',medical:r.querySelector('[data-f="medical"]')?.value||'',wheelchair:r.querySelector('[data-f="wheelchair"]')?.value||'N',ecName:r.querySelector('[data-f="ecName"]')?.value||'',ecPhone:r.querySelector('[data-f="ecPhone"]')?.value||'',sports:[]};r.querySelectorAll('[data-sp]').forEach(cb=>{if(cb.checked)e.sports.push(cb.getAttribute('data-sp'))});d.push(e)});return d}
+
+// Review
+function brv(){const stype=document.getElementById('f-stype').value;const sch=stype==='other'?document.getElementById('f-so').value:document.getElementById('f-school').value;const ath=grd();const sp=gso();
+document.getElementById('rvp').innerHTML=`<div style="background:var(--g50);border-radius:var(--rs);padding:14px;font-size:12px"><div style="display:grid;grid-template-columns:110px 1fr;gap:5px"><span style="color:var(--g500)">School</span><span style="font-weight:600">${sch}</span><span style="color:var(--g500)">Coordinator</span><span style="font-weight:600">${document.getElementById('f-nm').value}</span><span style="color:var(--g500)">Email</span><span>${document.getElementById('f-em').value}</span><span style="color:var(--g500)">Phone</span><span>${document.getElementById('f-ph').value}</span><span style="color:var(--g500)">Season</span><span style="font-weight:600">${document.getElementById('f-se').value}</span><span style="color:var(--g500)">Total Athletes</span><span style="font-weight:600">${ath.length}</span></div></div>`;
+let h=`<table class="st"><thead><tr><th style="text-align:left">Sport</th><th># Athletes</th><th># Partners</th><th># Wheelchair</th><th># Total</th></tr></thead><tbody>`;
+let tA=0,tP=0,tW=0,tT=0;
+sp.forEach(s=>{const en=ath.filter(a=>a.sports.includes(s.id));const wm=en.filter(a=>a.medical==='Y').length;const nm=en.filter(a=>a.medical!=='Y').length;const wc=en.filter(a=>a.wheelchair==='Y').length;tA+=wm;tP+=nm;tW+=wc;tT+=en.length;h+=`<tr><td>${s.i} ${s.n}</td><td>${wm}</td><td>${nm}</td><td>${wc}</td><td>${en.length}</td></tr>`});
+h+=`<tr class="tr"><td>TOTALS</td><td>${tA}</td><td>${tP}</td><td>${tW}</td><td>${tT}</td></tr></tbody></table>`;
+document.getElementById('stw').innerHTML=h;
+// Compliance check
+const miss=ath.filter(a=>a.medical!=='Y');
+if(miss.length>0){document.getElementById('compw').innerHTML=`<div class="comp"><h4>⚠️ Missing Medical Clearance (${miss.length} athlete${miss.length>1?'s':''})</h4><ul>${miss.map(a=>`<li class="miss">• ${a.firstName} ${a.lastName}</li>`).join('')}</ul><p style="font-size:11px;color:var(--g500);margin-top:8px">These athletes must have medical clearance on file before their first practice. The confirmation email will include this list as a reminder.</p></div>`}else{document.getElementById('compw').innerHTML=`<div style="background:var(--grn-l);border-radius:var(--rs);padding:12px;margin-top:12px;font-size:12px;color:var(--grn);font-weight:600">✓ All athletes have medical clearance on file.</div>`}}
+
+function sub(){const stype=document.getElementById('f-stype').value;const sch=stype==='other'?document.getElementById('f-so').value:document.getElementById('f-school').value;const ath=grd();const sp=gso();document.getElementById('s4').classList.remove('a');document.getElementById('s5').classList.add('a');document.querySelector('.stp').style.display='none';document.getElementById('slbl').style.display='none';const wc=ath.filter(a=>a.wheelchair==='Y').length;const miss=ath.filter(a=>a.medical!=='Y').length;document.getElementById('csum').innerHTML=`<div style="display:grid;grid-template-columns:110px 1fr;gap:3px"><span style="color:var(--g500)">School</span><span style="font-weight:600">${sch}</span><span style="color:var(--g500)">Season</span><span style="font-weight:600">${document.getElementById('f-se').value}</span><span style="color:var(--g500)">Sports</span><span style="font-weight:600">${sp.map(s=>s.n).join(', ')}</span><span style="color:var(--g500)">Athletes</span><span style="font-weight:600">${ath.length}</span><span style="color:var(--g500)">Wheelchair</span><span style="font-weight:600">${wc}</span>${miss>0?`<span style="color:var(--red)">Missing Medical</span><span style="font-weight:600;color:var(--red)">${miss} athlete${miss>1?'s':''}</span>`:''}</div>`;console.log('SUBMIT:',{school:sch,coordinator:document.getElementById('f-nm').value,email:document.getElementById('f-
