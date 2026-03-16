@@ -13,9 +13,7 @@
 .hd{background:var(--wh);border-bottom:1px solid var(--g200);padding:16px 0;position:sticky;top:0;z-index:100}
 .hdi{max-width:960px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between}
 .hdb{display:flex;align-items:center;gap:12px}
-.logo{width:40px;height:40px;border-radius:50%;position:relative;overflow:hidden;flex-shrink:0}
-.logo::before{content:'';position:absolute;width:100%;height:100%;background:conic-gradient(var(--red) 0deg 90deg,var(--blue) 90deg 180deg,var(--yel) 180deg 270deg,var(--grn) 270deg 360deg);border-radius:50%}
-.logo::after{content:'SO';position:relative;z-index:1;color:white;font-family:'Playfair Display',serif;font-weight:700;font-size:13px;letter-spacing:1px;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+.logo{height:44px;width:auto;flex-shrink:0;display:block}
 .hdt{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--dk)}
 .hds{font-size:11px;color:var(--g500)}
 .badge{background:var(--blue-l);color:var(--blue);font-size:11px;font-weight:600;padding:5px 12px;border-radius:100px}
@@ -99,7 +97,7 @@ input::placeholder,textarea::placeholder{color:var(--g400)}textarea{resize:verti
 </head>
 <body>
 <div class="tb"></div>
-<header class="hd"><div class="hdi"><div class="hdb"><div class="logo"></div><div><div class="hdt">Sports Intent Declaration</div><div class="hds">Special Olympics District of Columbia</div></div></div><div class="badge" id="sbadge">Spring 2026</div></div></header>
+<header class="hd"><div class="hdi"><div class="hdb"><img class="logo" src="https://specialolympicsdc.org/wp-content/uploads/2019/11/logo-special-olympics-dc@2-1.png" alt="Special Olympics DC"><div><div class="hdt">Sports Intent Declaration</div><div class="hds">Special Olympics District of Columbia</div></div></div><div class="badge" id="sbadge">Spring 2026</div></div></header>
 <div class="stp" id="stp"><div class="sd a"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div></div>
 <div class="sl" id="slbl">Step 1 of 4: Program Information</div>
 <div class="mn">
